@@ -1,27 +1,29 @@
 package dbconf
 
 import (
-	"sync"
 	"os"
 	"strconv"
+	"sync"
 )
 
-type DbConfig struct {
-	DatabaseName			string
-	DatabaseHost			string
-	DatabasePort			uint
-	DatabaseUser			string
-	DatabasePassword		string
-	DatabaseSslMode			string
-	DatabasePoolMaxIdleConnections	int
-	DatabasePoolMaxOpenConnections	int
-	DatabaseEnableLogging		bool
+// DBConfig is database configuration
+type DBConfig struct {
+	DatabaseName                   string
+	DatabaseHost                   string
+	DatabasePort                   uint
+	DatabaseUser                   string
+	DatabasePassword               string
+	DatabaseSSLMode                string
+	DatabasePoolMaxIdleConnections int
+	DatabasePoolMaxOpenConnections int
+	DatabaseEnableLogging          bool
 }
 
-var configInstance *DbConfig
+var configInstance *DBConfig
 var configOnce sync.Once
 
-func GetDbConfig() (*DbConfig) {
+// GetDBConfig reads the database config out of the environment
+func GetDBConfig() *DBConfig {
 	configOnce.Do(func() {
 		databaseName := os.Getenv("DATABASE_NAME")
 		if databaseName == "" {
@@ -48,9 +50,9 @@ func GetDbConfig() (*DbConfig) {
 			databasePassword = "password"
 		}
 
-		databaseSslMode := os.Getenv("DATABASE_SSL_MODE")
-		if databaseSslMode == "" {
-			databaseSslMode = "disable"
+		databaseSSLMode := os.Getenv("DATABASE_SSL_MODE")
+		if databaseSSLMode == "" {
+			databaseSSLMode = "disable"
 		}
 
 		databasePoolMaxIdleConnections, _ := strconv.ParseInt(os.Getenv("DATABASE_POOL_MAX_IDLE_CONNECTIONS"), 10, 8)
@@ -60,19 +62,19 @@ func GetDbConfig() (*DbConfig) {
 
 		databasePoolMaxOpenConnections, _ := strconv.ParseInt(os.Getenv("DATABASE_POOL_MAX_OPEN_CONNECTIONS"), 10, 8)
 
-		configInstance = &DbConfig{
-			DatabaseName: databaseName,
-			DatabaseHost: databaseHost,
-			DatabasePort: uint(databasePort),
-			DatabaseUser: databaseUser,
-			DatabasePassword: databasePassword,
-			DatabaseSslMode: databaseSslMode,
+		configInstance = &DBConfig{
+			DatabaseName:                   databaseName,
+			DatabaseHost:                   databaseHost,
+			DatabasePort:                   uint(databasePort),
+			DatabaseUser:                   databaseUser,
+			DatabasePassword:               databasePassword,
+			DatabaseSSLMode:                databaseSSLMode,
 			DatabasePoolMaxIdleConnections: int(databasePoolMaxIdleConnections),
 			DatabasePoolMaxOpenConnections: int(databasePoolMaxOpenConnections),
-			DatabaseEnableLogging: os.Getenv("DATABASE_LOGGING") == "true",
+			DatabaseEnableLogging:          os.Getenv("DATABASE_LOGGING") == "true",
 		}
 	})
 	return configInstance
 }
 
-var dbConf = GetDbConfig()
+var dbConf = GetDBConfig()
