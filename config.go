@@ -35,7 +35,7 @@ func GetDBConfig() *DBConfig {
 			databaseHost = "localhost"
 		}
 
-		databasePort, _ := strconv.ParseUint(os.Getenv("DATABASE_PORT"), 10, 8)
+		databasePort, _ := strconv.ParseUint(os.Getenv("DATABASE_PORT"), 10, 64)
 		if databasePort == 0 {
 			databasePort = 5432
 		}
