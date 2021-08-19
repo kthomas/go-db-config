@@ -29,14 +29,15 @@ func DatabaseConnection() *gorm.DB {
 // DatabaseConnectionFactory returns a leased database connection from the underlying
 // pool configured from the given database configuration
 func DatabaseConnectionFactory(cfg *DBConfig) (*gorm.DB, error) {
-	args := fmt.Sprintf(
-		"host=%s user=%s password=%s dbname=%s sslmode=%s",
-		cfg.DatabaseHost,
-		cfg.DatabaseUser,
-		cfg.DatabasePassword,
-		cfg.DatabaseName,
-		cfg.DatabaseSSLMode,
-	)
+         args := fmt.Sprintf(
+                "host=%s port=%d user=%s password=%s dbname=%s sslmode=%s",
+                cfg.DatabaseHost,
+                cfg.DatabasePort,
+                cfg.DatabaseUser,
+                cfg.DatabasePassword,
+                cfg.DatabaseName,
+                cfg.DatabaseSSLMode,
+        )
 
 	db, err := gorm.Open("postgres", args)
 
